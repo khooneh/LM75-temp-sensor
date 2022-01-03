@@ -7,8 +7,8 @@
 #include <ESP8266WiFiMulti.h> 
 
 #include <ESP8266mDNS.h>
-#include <ESP8266WebServer.h>   // Include the WebServer library
-//
+#include <ESP8266WebServer.h>   
+
 
 #include <inttypes.h>
 #include <Wire.h>
@@ -73,8 +73,6 @@ void showC() {
     display.setSegments(celsius, 2, 2);
 
     isCelsius = true; 
-
-    server.send(200, "text/plain", "Display should show Celsius"); 
 }
 
 int getTempF() {
@@ -85,10 +83,12 @@ int getTempF() {
 }
 
 void sendF() {
+  Serial.print(getTempF());
   server.send(200, "text/plain", String(getTempF()));
 }
 
 void sendC() {
+  Serial.print(termo.getTemp());
   server.send(200, "text/plain", String(termo.getTemp()));
 }
 
@@ -129,8 +129,10 @@ void setup()
     server.begin();                           
     Serial.println("HTTP server started");
 
-    if (WiFi.status() == WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED) {
       digitalWrite(LED_BUILTIN, LOW);
+      delay(1000);
+      digitalWrite(LED_BUILTIN, HIGH);
     } 
  
 }
